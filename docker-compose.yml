@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  cache:
+    image: redis
+    volumes:
+      - redis_volume:/data
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_PWD=redis
+      - REDIS_NAME=redis
+      - REDIS_DB=1
+    depends_on:
+      - cache
+
+volumes:
+  redis_volume:
+
